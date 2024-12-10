@@ -30,10 +30,8 @@ void traverse(vector<string> map, int x, int y, vector<coords>& end_coords){
     if(currently_at == '9'){ // Yes im using chars for this
         coords end_coord = {x,y};
 
-        if(!coords_exist(end_coords, end_coord)){
-            end_coords.push_back(end_coord);
-            return;
-        }
+        end_coords.push_back(end_coord);
+        return;
     }
     
     
