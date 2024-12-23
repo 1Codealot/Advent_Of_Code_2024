@@ -4,115 +4,81 @@
 #include <fstream>
 #include <algorithm>
 
-typedef struct part
-{
-    int id;
-    int count;
-} part;
-
 using namespace std;
 
-bool isBlank(struct part p){
-    return p.id == -1;
-}
-
-bool isDefragmented(vector<part> hard_disk){
-    int idx = 0;
-    while (!isBlank(hard_disk.at(idx)))
-    {
-        idx++;
-    }
-    if (idx == hard_disk.size())
-    {
-        return false;
-    }
-
-    // Found a blank 
-    for (; idx < hard_disk.size(); idx++)
-    {
-        if (!isBlank(hard_disk.at(idx)))
-        {
-            return false;
-        }
-    }
-    return true;
+bool isMinus1(int i){
+    return i == -1;
 }
 
 int main(){
-    string line;
+    string puzzle;
 
-    fstream f("input.txt");
+    ifstream f("input.txt");
 
-    getline(f, line);
+    getline(f, puzzle);
 
     f.close();
 
-    vector<struct part> hard_disk;
+    vector<int> disk;
 
-    int id = 0;
-    for (size_t i = 0; i < line.size(); i++)
+    for (size_t i = 0; i < puzzle.size(); i++)
     {
-        if(i % 2 == 0){
-            hard_disk.push_back({
-                .id = id,
-                .count = line.at(i) - '0'
-            });
-            id++;
+        if (i%2 == 0)
+        {
+            for (size_t n = 0; n < (puzzle.at(i)) - '0'; n++)
+            {
+                disk.push_back(i/2);
+            }
+            
         }
         else
         {
-            hard_disk.push_back({
-                .id = -1,
-                .count = line.at(i) - '0'
-            });
+            for (size_t n = 0; n < (puzzle.at(i)) - '0'; n++)
+            {
+                disk.push_back(-1);
+            }
         }
     }
 
-    
     // Defragment
-    
-    while (!isDefragmented(hard_disk))
+
+    for (auto i = disk.rbegin(); i != disk.rend(); i++)
     {
-        auto first_blank = *(find_if(hard_disk.begin(), hard_disk.end(), isBlank));
-        auto last_non_blank = *(find_if_not(hard_disk.rbegin(), hard_disk.rend(), isBlank));
-
-        if (first_blank.count == last_non_blank.count)
-        {
-            *find_if(hard_disk.begin(), hard_disk.end(), isBlank) = {
-                .id = last_non_blank.id,
-                .count = last_non_blank.count
-            };
-            *(find_if_not(hard_disk.rbegin(), hard_disk.rend(), isBlank)) = {
-                .id = -1,
-                .count = 0
-            };
+        if(*i == -1){
             continue;
         }
+        
 
-        if (first_blank.count > last_non_blank.count)
-        {
-            // Find the blank's index
-            int idx = distance(hard_disk.begin(), find(hard_disk.begin(), hard_disk.end(), first_blank)) + 1;
-            hard_disk.insert(hard_disk.begin() + idx, last_non_blank);
-
-            hard_disk.at(idx+1).count -= first_blank.count > last_non_blank.count;
-
-            *(find_if_not(hard_disk.rbegin(), hard_disk.rend(), isBlank)) = {
-                .id = -1,
-                .count = 0
-            };
-            continue;
+        int tmp = *i;
+        *i = *find_if(disk.begin(), disk.end(), isMinus1);
+        *find_if(disk.begin(), disk.end(), isMinus1) = tmp;
+    }
+    
+    for (auto &&i : disk)
+    {
+        if(isMinus1(i)){
+            cout << ".";
         }
+        else{
+            cout << i;
+        }
+    }
 
-        if (first_blank.count < last_non_blank.count)
+
+    size_t res = 0;
+
+    for (size_t i = 0; i < disk.size(); i++)
+    {
+        if (disk.at(i) == -1)
         {
-            // Replace the blank
-            
-            
-            
-
-        }        
-    }    
+            break;
+        }
+        res += i * disk.at(i);       
+    }
+    cout <<"\n";
+    
+    cout << "Res: " << res << "\n";
 
     return 0;
+    
 }
