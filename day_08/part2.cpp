@@ -28,7 +28,6 @@ int main(){
                 continue;
             }
 
-
             // Else
             for (size_t y2 = y1; y2 < puzzle.size(); y2++)
             {
@@ -46,15 +45,19 @@ int main(){
                             continue;
                         }
                         
+                        int harmonics1 = 1;
+                        int harmonics2 = 1;
 
-                        if ((x2 + x_diff >= 0) && (x2 + x_diff < puzzle.at(0).size()) && (y2 + y_diff >= 0) && (y2 + y_diff < puzzle.size()))
+                        while ((x2 + x_diff * harmonics1 >= 0) && (x2 + x_diff * harmonics1 < puzzle.at(0).size()) && (y2 + y_diff * harmonics1 >= 0) && (y2 + y_diff * harmonics1 < puzzle.size()))
                         {
-                            solved.at(y2+y_diff).at(x2+x_diff) = '#';
+                            solved.at(y2+y_diff*harmonics1).at(x2+x_diff*harmonics1) = '#';
+                            harmonics1++;
                         }
 
-                        if ((x1 - x_diff >= 0) && (x1 - x_diff < puzzle.at(0).size()) && (x1 - y_diff >= 0) && (y1 - y_diff < puzzle.size()))
+                        while ((x1 - x_diff * harmonics2 >= 0) && (x1 - x_diff * harmonics2 < puzzle.at(0).size()) && (x1 - y_diff * harmonics2 >= 0) && (y1 - y_diff * harmonics2 < puzzle.size()))
                         {
-                            solved.at(y1 - y_diff).at(x1-x_diff) = '#';
+                            solved.at(y1 - y_diff * harmonics2).at(x1-x_diff * harmonics2) = '#';
+                            harmonics2++;
                         }
                     }
                 }
@@ -67,7 +70,7 @@ int main(){
     for (string line: solved)
     {
         for(char c: line){
-            if(c == '#'){
+            if(c != '.'){
                 res++;
             }
         }

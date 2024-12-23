@@ -104,6 +104,7 @@ int main()
         }
             printVec(output);
             cout << idx;
+            getline(cin, buff);
     }
     
 /*    unsigned long long res = 0;
